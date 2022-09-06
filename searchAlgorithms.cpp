@@ -5,8 +5,9 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include <random>
 
-#include <chrono>
+#include <chrono> // raplce w/ ctime?
 
 #include <deque> // for breadthFirstSearch
 #include <stack> // for depthFirstSearch
@@ -15,8 +16,24 @@
 #include "exports.h"
 
 
-void randomRewardRiskProducts() {
-    std::cout << "implamentation coming!\n";
+std::map<double, double> randomRewardRiskProducts(int numProducts,
+                         double rewardMin=0, double rewardMax=100,
+                         double riskMin=1, double riskMax=100) {
+    std::map<double, double> dict;
+    double reward;
+    double risk;
+
+    int seed = rand();
+    std::default_random_engine generator(seed);
+
+
+    for (int i = 0; i < numProducts; i++) {
+        std::uniform_real_distribution<double> riskDist(riskMin, riskMax);
+        std::uniform_real_distribution<double> rewardDist(rewardMin, rewardMax);
+        dict.insert(std::make_pair(rewardDist(generator), riskDist(generator)));
+    }
+
+    return dict;
 }
 
 
@@ -187,6 +204,7 @@ genericNode* searchAlgos::depthFirstSearch(std::map<double, double> dict,
     auto end_time = std::chrono::high_resolution_clock::now(); // TIMER END
     std::chrono::duration<double, std::milli> run_time = end_time - start_time;
     std::cout << "DFS EXECUTION TIME: " << run_time.count() / 1000 << "s \n";
+
     return optimalSolution;
 }
 
@@ -196,21 +214,11 @@ genericNode* searchAlgos::depthFirstSearch(std::map<double, double> dict,
 
 
 int main() {
+    srand(time(NULL)); // set random seed
 
     // map structure is auto sorted based on key size
-    std::map<double, double> dict;
-	dict.insert(std::make_pair(19, 14));
-	dict.insert(std::make_pair(49, 40));
-	dict.insert(std::make_pair(50, 50));
-	dict.insert(std::make_pair(100, 100));
-	dict.insert(std::make_pair(12, 13));
-	dict.insert(std::make_pair(2, 3));
-	dict.insert(std::make_pair(24, 32));
-	dict.insert(std::make_pair(17, 9));
-	dict.insert(std::make_pair(1, 2));
-	dict.insert(std::make_pair(25, 35));
-	dict.insert(std::make_pair(80, 12));
-
+    // BFS and DFS should in theory therefor yield identical results
+    std::map<double, double> dict = randomRewardRiskProducts(60);
 
     searchAlgos OBJ;
 
