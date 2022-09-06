@@ -98,6 +98,7 @@ genericNode* searchAlgos::breadthFirstSearch(std::map<double, double> dict,
             edgeId++;
         }
     }
+
     auto end_time = std::chrono::high_resolution_clock::now(); // TIMER END
     std::chrono::duration<double, std::milli> run_time = end_time - start_time;
     std::cout << "BFS EXECUTION TIME: " << run_time.count() / 1000 << "s \n";
